@@ -82,6 +82,16 @@ internal final class PageTabBarCollectionViewFlowLayout: UICollectionViewFlowLay
     
     open var updateIndex: (Bool, Int) -> () = { _ in }
     
+    open weak var currentBaseScrollView: UIScrollView? {
+        guard let vc = selectedViewController else { return nil }
+        for subview in vc.view.subviews {
+            if let scrollView = subview as? UIScrollView {
+                return scrollView
+            }
+        }
+        return nil
+    }
+    
     open internal(set) var pageIndex: Int = 0 {
         didSet {
             // print("change from \(oldValue) to \(pageIndex)")
@@ -101,7 +111,8 @@ internal final class PageTabBarCollectionViewFlowLayout: UICollectionViewFlowLay
     open fileprivate(set) var pageTabBar: PageTabBar!
     open var isScrollEnabled = true {
         didSet {
-            collectionView.isScrollEnabled = isScrollEnabled
+            guard let cv = collectionView else { return }
+            cv.isScrollEnabled = isScrollEnabled
         }
     }
     
@@ -131,12 +142,13 @@ internal final class PageTabBarCollectionViewFlowLayout: UICollectionViewFlowLay
             pageTabBarItems.append(item)
         }
         self.pageIndex = initialPageIndex
+        
+        pageTabBar = PageTabBar(frame: CGRect(x: 0, y: 0, width: estimatedFrame.width, height: 44), tabBarItems: pageTabBarItems, initialIndex: pageIndex)
     }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        pageTabBar = PageTabBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44), tabBarItems: pageTabBarItems, initialIndex: pageIndex)
         pageTabBar.toIndex = { [unowned self] index in
             self.setPageIndex(index, animated: true)
         }

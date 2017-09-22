@@ -502,7 +502,7 @@ extension CollapseTabBarViewController: CollapseCollectionViewLayoutDelegate {
             return cell
         case CollapseCollectionViewLayout.Element.footer.kind:
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
-            
+
             return cell
         default:
             break
@@ -548,7 +548,7 @@ extension CollapseTabBarViewController: CollapseCollectionViewLayoutDelegate {
         else if scrollView.contentOffset.y == bottomOffsetY {
             // at top
             if innerScrollView.contentOffset.y + innerScrollView.contentInset.top == 0 {
-                innerScrollView.panGestureRecognizer.isEnabled = true
+                innerScrollView.panGestureRecognizer.isEnabled = false
             }
             else {
                 innerScrollView.panGestureRecognizer.isEnabled = true
